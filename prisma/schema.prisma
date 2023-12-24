@@ -1,0 +1,45 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("POSTGRES_PRISMA_URL") // pooling connection
+  directUrl = env("POSTGRES_URL_NON_POOLING") // direct connection
+}
+
+model Company {
+  id        String   @id @default(cuid())
+  name      String
+  slogan    String
+  email     String   @unique
+  password  String
+  jobs      Job[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Job {
+  id          String      @id @default(cuid())
+  title       String
+  description String
+  location    String
+  salary      String
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  company     Company     @relation(fields: [companyId], references: [id])
+  companyId   String
+  applicants  Applicant[]
+}
+
+model Applicant {
+  id        String   @id @default(cuid())
+  firstName String
+  lastName  String
+  email     String   @unique
+  phone     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  jobId     String
+  job       Job      @relation(fields: [jobId], references: [id])
+}
