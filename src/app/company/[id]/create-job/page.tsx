@@ -1,5 +1,6 @@
-'use client';
+'use client'
 import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 const Page = ({ params }: { params: { id: string } }) => {
   const [title, setTitle] = useState('');
@@ -7,6 +8,8 @@ const Page = ({ params }: { params: { id: string } }) => {
   const [location, setLocation] = useState('');
   const [salary, setSalary] = useState('');
 
+  const router = useRouter();
+  
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const body = JSON.stringify({
@@ -20,6 +23,7 @@ const Page = ({ params }: { params: { id: string } }) => {
       method: 'POST',
       body,
     });
+    router.push(`/company/${params.id}`);
   };
 
   return (

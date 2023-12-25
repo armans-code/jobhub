@@ -1,18 +1,20 @@
-import { headers } from 'next/headers';
+'use server'
 import Link from 'next/link';
 
 const fetchData = async () => {
-  const host = headers().get('host');
-  const res = await fetch(`http://${host}/api/company`);
+  const res = await fetch(`${process.env.SERVER_HOST}/api/company`, {
+    next: {
+      tags: ['companies'],
+    },
+  });
   return res.json();
 };
 
 export default async function Home() {
   const companies = await fetchData();
-  console.log(companies);
   return (
     <div className='flex flex-col gap-8'>
-      {companies.map((company: any) => (
+      {companies?.map((company: any) => (
         <div key={company.id}>
           <h1>{company.name}</h1>
           <p>{company.slogan}</p>
