@@ -1,5 +1,5 @@
 'use client';
-import React, { use, useState } from 'react';
+import React, { useState } from 'react';
 
 const Page = ({ params }: { params: { id: string } }) => {
   const [title, setTitle] = useState('');
@@ -13,7 +13,7 @@ const Page = ({ params }: { params: { id: string } }) => {
       title,
       description,
       location,
-      salary,
+      salary: +salary,
       companyId: params.id,
     });
     fetch('/api/job', {

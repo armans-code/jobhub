@@ -24,7 +24,7 @@ model Job {
   title       String
   description String
   location    String
-  salary      String
+  salary      Int         @default(0)
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
   company     Company     @relation(fields: [companyId], references: [id])
