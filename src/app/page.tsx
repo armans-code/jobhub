@@ -1,15 +1,8 @@
-import { headers } from 'next/headers';
 import Link from 'next/link';
-
-const fetchData = async () => {
-  const host = headers().get('host');
-  const res = await fetch(`http://${host}/api/company`);
-  return res.json();
-};
+import prisma from '../../lib/prisma';
 
 export default async function Home() {
-  const companies = await fetchData();
-  console.log(companies);
+  const companies = await prisma.company.findMany();
   return (
     <div className='flex flex-col gap-8'>
       {companies.map((company: any) => (

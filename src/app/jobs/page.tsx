@@ -1,13 +1,7 @@
-const fetchData = async () => {
-  const res = await fetch(`http://localhost:3000/api/job`, {
-    cache: 'default',
-  });
-  return res.json();
-};
+import prisma from '../../../lib/prisma';
 
 export default async function page() {
-  const jobs = await fetchData();
-  console.log(jobs);
+  const jobs = await prisma.job.findMany()
   return (
     <div>
       {jobs?.map((job: any) => (
