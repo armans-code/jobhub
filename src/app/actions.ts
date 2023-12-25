@@ -18,6 +18,13 @@ export type CreateJobBody = {
   companyId: string;
 };
 
+export type RegisterBody = {
+  name: string;
+  email: string;
+  password: string;
+  supabase_id: string;
+};
+
 export async function createApplicant(body: CreateApplicantBody) {
   const applicant = await prisma.applicant.create({ data: body });
   return applicant;
@@ -26,4 +33,9 @@ export async function createApplicant(body: CreateApplicantBody) {
 export async function createJob(body: CreateJobBody) {
   const job = await prisma.job.create({ data: body });
   return job;
+}
+
+export async function register(body: RegisterBody) {
+  const user = await prisma.company.create({ data: body });
+  return user;
 }
