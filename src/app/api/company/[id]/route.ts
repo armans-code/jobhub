@@ -12,7 +12,11 @@ export async function GET(
       id: id,
     },
     include: {
-      jobs: true,
+      jobs: {
+        orderBy: {
+          updatedAt: 'desc',
+        },
+      },
     },
   });
   return NextResponse.json(company);
