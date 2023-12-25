@@ -1,6 +1,5 @@
 import { headers } from 'next/headers';
 import Link from 'next/link';
-import { redirect } from 'next/navigation';
 
 const fetchData = async () => {
   const host = headers().get('host');

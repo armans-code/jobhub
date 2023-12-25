@@ -1,32 +1,31 @@
-import { headers } from 'next/headers';
+'use client';
 import ApplyForm from '../../../components/ApplyForm';
+import useJob from '../../../hooks/useJob';
 
-const fetchData = async (id: string) => {
-  const host = headers().get('host');
-  const res = await fetch(`http://${host}/api/job/${id}`);
-  return res.json();
-};
+export default function Page({ params }: { params: { id: string } }) {
+  const { data, isLoading } = useJob(params.id);
 
-export default async function Page({ params }: { params: { id: string } }) {
-  const { title, description, location, salary, company, applicants } =
-    await fetchData(params.id);
+  if (isLoading) {
+    return <div>loading...</div>;
+  }
+
   return (
-    <div>
-      <p>Title: {title}</p>
-      <p>Description: {description}</p>
-      <p>Location: {location}</p>
-      <p>Salary: {salary}</p>
-      <p>Company: {company.name}</p>
+    data && (
+      <div>
+        <p>Title: {data.title}</p>
+        <p>Description: {data.description}</p>
+        <p>Location: {data.location}</p>
+        <p>Salary: {data.salary}</p>
+        <p>Company: {data.company.name}</p>
 
-      <ApplyForm id={params.id} />
-
-      <p>all applicants:</p>
-      {applicants.map((applicant: any) => (
-        <div key={applicant.id}>
-          <p>{applicant.name}</p>
-          <p>{applicant.email}</p>
-        </div>
-      ))}
-    </div>
+        <ApplyForm id={params.id} />
+        {data?.applicants.map((applicant: any) => (
+          <div key={applicant.id}>
+            <p>{applicant.name}</p>
+            <p>{applicant.email}</p>
+          </div>
+        ))}
+      </div>
+    )
   );
 }
