@@ -1,10 +1,14 @@
-'use client';
 import Link from 'next/link';
-import useCompany from '../../../hooks/useCompany';
 
-export default function Page({ params }: { params: { id: string } }) {
-  const { data: company, isLoading } = useCompany(params.id);
-  if (isLoading) return <div>Loading...</div>;
+const fetchData = async (id: string) => {
+  const res = await fetch(`http://localhost:3000/api/company/${id}`, {
+    cache: 'default',
+  });
+  return res.json();
+};
+
+export default async function Page({ params }: { params: { id: string } }) {
+  const company = await fetchData(params.id);
   const { jobs } = company;
   return (
     company && (
