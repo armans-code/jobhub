@@ -1,5 +1,6 @@
 'use client';
 import React, { useState } from 'react';
+import { createApplicant } from '../../actions';
 
 const ApplyForm = ({ id }: { id: string }) => {
   const [firstName, setFirstName] = useState('');
@@ -7,18 +8,15 @@ const ApplyForm = ({ id }: { id: string }) => {
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
 
-  const handleSubmit = () => {
-    const body = JSON.stringify({
+  const handleSubmit = async () => {
+    const applicant = await createApplicant({
       firstName,
       lastName,
       email,
       phone,
       jobId: id,
     });
-    fetch('/api/applicant', {
-      method: 'POST',
-      body,
-    });
+    console.log(applicant);
   };
 
   return (

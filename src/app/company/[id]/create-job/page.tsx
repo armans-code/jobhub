@@ -1,5 +1,6 @@
 'use client';
 import React, { useState } from 'react';
+import { createJob } from '../../../actions';
 
 const Page = ({ params }: { params: { id: string } }) => {
   const [title, setTitle] = useState('');
@@ -7,19 +8,16 @@ const Page = ({ params }: { params: { id: string } }) => {
   const [location, setLocation] = useState('');
   const [salary, setSalary] = useState('');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const body = JSON.stringify({
+    const job = await createJob({
       title,
       description,
       location,
       salary: +salary,
       companyId: params.id,
     });
-    fetch('/api/job', {
-      method: 'POST',
-      body,
-    });
+    console.log(job);
   };
 
   return (
