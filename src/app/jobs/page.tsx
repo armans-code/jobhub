@@ -1,5 +1,3 @@
-// import { headers } from 'next/headers';
-
 const fetchData = async () => {
   const res = await fetch(`http://localhost:3000/api/job`, {
     cache: 'default',

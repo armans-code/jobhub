@@ -1,15 +1,11 @@
 import Link from 'next/link';
-
-const fetchData = async (id: string) => {
-  const res = await fetch(`http://localhost:3000/api/company/${id}`, {
-    cache: 'default',
-  });
-  return res.json();
-};
+import prisma from '../../../../lib/prisma';
 
 export default async function Page({ params }: { params: { id: string } }) {
-  const company = await fetchData(params.id);
-  const { jobs } = company;
+  const company = await prisma.company.findFirst({
+    where: { id: params.id },
+    include: { jobs: true },
+  });
   return (
     company && (
       <div className='bg-gray-100 min-h-screen'>
@@ -21,7 +17,7 @@ export default async function Page({ params }: { params: { id: string } }) {
           Create Job
         </Link>
         <div className='flex flex-col mt-4 gap-8'>
-          {jobs.map((job: any) => (
+          {company.jobs.map((job: any) => (
             <div key={job.id} className='bg-white p-4 rounded shadow'>
               <h1 className='text-lg'>{job.title}</h1>
               <p className='my-2'>{job.description}</p>
