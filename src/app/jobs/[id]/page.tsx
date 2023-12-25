@@ -1,4 +1,5 @@
 import { headers } from 'next/headers';
+import ApplyForm from '../../../components/ApplyForm';
 
 const fetchData = async (id: string) => {
   const host = headers().get('host');
@@ -17,6 +18,8 @@ export default async function Page({ params }: { params: { id: string } }) {
       <p>Location: {location}</p>
       <p>Salary: {salary}</p>
       <p>Company: {company.name}</p>
+
+      <ApplyForm id={params.id} />
     </div>
   );
 }
