@@ -8,9 +8,8 @@ const fetchData = async (id: string) => {
 };
 
 export default async function Page({ params }: { params: { id: string } }) {
-  const { title, description, location, salary, company } = await fetchData(
-    params.id,
-  );
+  const { title, description, location, salary, company, applicants } =
+    await fetchData(params.id);
   return (
     <div>
       <p>Title: {title}</p>
@@ -20,6 +19,14 @@ export default async function Page({ params }: { params: { id: string } }) {
       <p>Company: {company.name}</p>
 
       <ApplyForm id={params.id} />
+
+      <p>all applicants:</p>
+      {applicants.map((applicant: any) => (
+        <div key={applicant.id}>
+          <p>{applicant.name}</p>
+          <p>{applicant.email}</p>
+        </div>
+      ))}
     </div>
   );
 }

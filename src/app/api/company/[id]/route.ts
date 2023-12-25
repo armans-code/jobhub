@@ -11,6 +11,9 @@ export async function GET(
     where: {
       id: id,
     },
+    include: {
+      jobs: true,
+    },
   });
   return NextResponse.json(company);
 }

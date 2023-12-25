@@ -13,6 +13,7 @@ export async function GET(
     },
     include: {
       company: true,
+      applicants: true,
     },
   });
   return NextResponse.json(job);
