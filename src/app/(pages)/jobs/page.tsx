@@ -1,7 +1,7 @@
-import prisma from '../../../lib/prisma';
+import prisma from '../../../../lib/prisma';
 
 export default async function page() {
-  const jobs = await prisma.job.findMany()
+  const jobs = await prisma.job.findMany();
   return (
     <div>
       {jobs?.map((job: any) => (

@@ -1,8 +1,8 @@
 import Link from 'next/link';
-import { Badge } from '../components/ui/badge';
-import { Input } from '../components/ui/input';
-import { Button } from '../components/ui/button';
-import JobCard from '../components/landing/job-card';
+import { Badge } from '../../../components/ui/badge';
+import { Input } from '../../../components/ui/input';
+import { Button } from '../../../components/ui/button';
+import JobCard from '../../../components/landing/job-card';
 
 export default async function Home() {
   return (
