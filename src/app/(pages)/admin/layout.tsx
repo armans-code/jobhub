@@ -1,5 +1,6 @@
 import React from 'react';
 import Sidebar from '../../../components/admin/Sidebar';
+import AdminHeader from '../../../components/admin/AdminHeader';
 
 export default async function MarketingLayout({
   children,
@@ -9,7 +10,10 @@ export default async function MarketingLayout({
   return (
     <div className='grid min-h-screen w-full lg:grid-cols-[260px_1fr]'>
       <Sidebar />
-      <main className='flex-1'>{children}</main>
+      <div className='flex flex-col'>
+        <AdminHeader />
+        <main className='flex-1'>{children}</main>
+      </div>
     </div>
   );
 }
