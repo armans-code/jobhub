@@ -9,15 +9,16 @@ datasource db {
 }
 
 model Company {
-  id          String   @id @default(cuid())
-  supabase_id String   @unique
-  name        String
-  slogan      String   @default("") 
-  email       String   @unique
-  password    String
-  jobs        Job[]
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id       String @id @default(cuid())
+  name     String
+  slogan   String @default("")
+  password String
+}
+
+model Admin {
+  id          String @id @default(cuid())
+  email       String @unique
+  supabase_id String @unique
 }
 
 model Job {
@@ -28,8 +29,7 @@ model Job {
   salary      Int         @default(0)
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
-  company     Company     @relation(fields: [companyId], references: [id])
-  companyId   String
+  archived    Boolean     @default(false)
   applicants  Applicant[]
 }
 
