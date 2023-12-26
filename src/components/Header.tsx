@@ -9,7 +9,7 @@ import {
 
 const Header: React.FC = () => {
   return (
-    <header className='w-full bg-white dark:bg-gray-800'>
+    <header className='w-full bg-transparent dark:bg-gray-800'>
       <div className='container px-4 md:px-6 flex justify-between items-center'>
         <h1 className='text-3xl font-bold'>ABC Company</h1>
         <NavigationMenu>
