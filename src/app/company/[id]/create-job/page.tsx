@@ -1,6 +1,10 @@
 'use client';
 import React, { useState } from 'react';
 import { createJob } from '../../../actions';
+import { Button } from '../../../../components/ui/button';
+import { Input } from '../../../../components/ui/input';
+import { Textarea } from '../../../../components/ui/textarea';
+import { Label } from '../../../../components/ui/label';
 
 const Page = ({ params }: { params: { id: string } }) => {
   const [title, setTitle] = useState('');
@@ -25,22 +29,22 @@ const Page = ({ params }: { params: { id: string } }) => {
       <h1 className='text-2xl font-bold mb-4'>Create Job Position</h1>
       <form onSubmit={handleSubmit}>
         <div className='mb-4'>
-          <label htmlFor='title' className='block font-medium mb-2'>
+          <Label htmlFor='title' className='block font-medium mb-2'>
             Title
-          </label>
-          <input
+          </Label>
+          <Input
             type='text'
             id='title'
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            className='border border-gray-300 px-4 py-2 rounded-md w-full'
+            // className='border border-gray-300 px-4 py-2 rounded-md w-full'
           />
         </div>
         <div className='mb-4'>
-          <label htmlFor='description' className='block font-medium mb-2'>
+          <Label htmlFor='description' className='block font-medium mb-2'>
             Description
-          </label>
-          <textarea
+          </Label>
+          <Textarea
             id='description'
             value={description}
             onChange={(e) => setDescription(e.target.value)}
@@ -48,10 +52,10 @@ const Page = ({ params }: { params: { id: string } }) => {
           />
         </div>
         <div className='mb-4'>
-          <label htmlFor='location' className='block font-medium mb-2'>
+          <Label htmlFor='location' className='block font-medium mb-2'>
             Location
-          </label>
-          <input
+          </Label>
+          <Input
             type='text'
             id='location'
             value={location}
@@ -60,10 +64,10 @@ const Page = ({ params }: { params: { id: string } }) => {
           />
         </div>
         <div className='mb-4'>
-          <label htmlFor='salary' className='block font-medium mb-2'>
+          <Label htmlFor='salary' className='block font-medium mb-2'>
             Salary
-          </label>
-          <input
+          </Label>
+          <Input
             type='text'
             id='salary'
             value={salary}
@@ -71,12 +75,12 @@ const Page = ({ params }: { params: { id: string } }) => {
             className='border border-gray-300 px-4 py-2 rounded-md w-full'
           />
         </div>
-        <button
+        <Button
           type='submit'
-          className='bg-blue-500 text-white px-4 py-2 rounded-md'
+          // className='bg-blue-500 text-white px-4 py-2 rounded-md'
         >
           Create Job
-        </button>
+        </Button>
       </form>
     </div>
   );
