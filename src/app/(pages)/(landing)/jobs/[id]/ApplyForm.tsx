@@ -1,6 +1,6 @@
 'use client';
 import React, { useState } from 'react';
-import { createApplicant } from '../../../actions';
+import { createApplicant } from '../../../../actions';
 
 const ApplyForm = ({ id }: { id: string }) => {
   const [firstName, setFirstName] = useState('');

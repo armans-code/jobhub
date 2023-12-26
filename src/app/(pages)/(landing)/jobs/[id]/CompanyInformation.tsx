@@ -1,5 +1,5 @@
 import React from 'react';
-import prisma from '../../../../../lib/prisma';
+import prisma from '../../../../../../lib/prisma';
 
 async function CompanyInformation({ id }: { id: string }) {
   const data = await prisma.job.findUnique({
