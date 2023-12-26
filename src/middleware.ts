@@ -11,24 +11,17 @@ export async function middleware(req: NextRequest) {
     data: { session },
   } = await supabase.auth.getSession();
 
-  const isLoginPage = req.nextUrl.pathname === '/login';
-  const isRegisterPage = req.nextUrl.pathname === '/register';
+  const isOnAdminPage = req.nextUrl.pathname.startsWith('/admin');
 
   if (!session) {
-    if (isLoginPage || isRegisterPage) {
+    if (!isOnAdminPage) {
       return res;
     }
     const url = req.nextUrl.clone();
     url.pathname = '/login';
     return NextResponse.redirect(url);
-  } else {
-    if (isLoginPage || isRegisterPage) {
-      const url = req.nextUrl.clone();
-      url.pathname = '/';
-      return NextResponse.redirect(url);
-    }
-    return res;
   }
+  return res;
 }
 
 // Ensure the middleware is only called for relevant paths.
