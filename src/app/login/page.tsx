@@ -27,11 +27,14 @@ export default function Login() {
   //   };
 
   const handleSignIn = async () => {
-    await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
-    router.refresh();
+    await supabase.auth
+      .signInWithPassword({
+        email,
+        password,
+      })
+      .then(() => {
+        router.push('/admin');
+      });
   };
 
   return (
