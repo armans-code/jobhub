@@ -26,11 +26,12 @@ model Job {
   title       String
   description String
   location    String
+  vacancies   Int         @default(1)
   salary      Int         @default(0)
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
   archived    Boolean     @default(false)
-  applicants  Applicant[]
+  applicants  Applicant[] 
 }
 
 model Applicant {
