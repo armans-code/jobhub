@@ -42,6 +42,8 @@ PRIVATE ROUTES:
   - see all team members
   - remove team members
   - see which team members have accepted, blocked who
+- /admin/tags
+  - modify (add,delete,edit) job tags
 
 future features:
 
