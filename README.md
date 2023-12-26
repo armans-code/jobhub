@@ -50,3 +50,4 @@ future features:
 - export to PDF/CSV
 - in-site resume viewer
 - message applicants within app
+- auto-email on accepting/rejecting applicant
