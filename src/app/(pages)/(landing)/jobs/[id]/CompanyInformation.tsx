@@ -2,24 +2,23 @@ import React from 'react';
 import prisma from '../../../../../../lib/prisma';
 
 async function CompanyInformation({ id }: { id: string }) {
-  const data = await prisma.job.findUnique({
+  const jobs = await prisma.job.findMany({
     where: {
       id: id,
     },
-    include: {
-      company: true,
-    },
   });
   return (
-    data && (
-      <div>
-        <p>Title: {data.title}</p>
-        <p>Description: {data.description}</p>
-        <p>Location: {data.location}</p>
-        <p>Salary: {data.salary}</p>
-        <p>Company: {data.company.name}</p>
-      </div>
-    )
+    <div>
+      <p>our jobs:</p>
+      {jobs.map((job) => (
+        <div key={job.id}>
+          <p>{job.title}</p>
+          <p>{job.description}</p>
+          <p>{job.location}</p>
+          <p>{job.vacancies}</p>
+        </div>
+      ))}
+    </div>
   );
 }
 
