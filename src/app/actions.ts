@@ -15,7 +15,6 @@ export type CreateJobBody = {
   description: string;
   location: string;
   salary: number;
-  companyId: string;
 };
 
 export type RegisterBody = {

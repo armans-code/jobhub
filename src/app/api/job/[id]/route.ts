@@ -12,7 +12,6 @@ export async function GET(
       id: id,
     },
     include: {
-      company: true,
       applicants: true,
     },
   });
