@@ -41,7 +41,7 @@ function JobCard({
 }) {
   const router = useRouter();
 
-  const applicants = job.applicants.length - 1;
+  const applicants = job.applicants.length;
   const jobType = convertJobTypeToString(job.type);
 
   const handleDeleteCard = async () => {
