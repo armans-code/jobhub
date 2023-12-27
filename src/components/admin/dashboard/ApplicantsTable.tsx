@@ -8,6 +8,12 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import prisma from '../../../../lib/prisma';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '../../ui/tooltip';
 
 async function ApplicantsTable() {
   const applicants = await prisma.applicant.findMany({
@@ -39,9 +45,18 @@ async function ApplicantsTable() {
             <TableCell className='hidden md:table-cell'>
               {applicant.job.title}
             </TableCell>
-            <TableCell className='hidden md:table-cell text-right'>
-              {applicant.createdAt.toLocaleDateString()}
-            </TableCell>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <TableCell className='hidden md:table-cell text-right'>
+                    {applicant.createdAt.toLocaleDateString()}
+                  </TableCell>
+                </TooltipTrigger>
+                <TooltipContent>
+                  {applicant.createdAt.toLocaleString()}
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
           </TableRow>
         ))}
       </TableBody>
