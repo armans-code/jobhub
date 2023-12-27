@@ -31,7 +31,9 @@ model Job {
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
   archived    Boolean     @default(false)
-  applicants  Applicant[] 
+  applicants  Applicant[] @relation
+  JobTag      JobTag[]
+  type        JobType     @default(FULL_TIME)
 }
 
 model Applicant {
@@ -43,5 +45,33 @@ model Applicant {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   jobId     String
-  job       Job      @relation(fields: [jobId], references: [id])
+  job       Job      @relation(fields: [jobId], references: [id], onDelete: Cascade)
+}
+
+model Tag {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  JobTag    JobTag[]
+}
+
+model JobTag {
+  id        String   @id @default(cuid())
+  jobId     String
+  job       Job      @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  tagId     String
+  tag       Tag      @relation(fields: [tagId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([jobId, tagId])
+}
+
+enum JobType {
+  FULL_TIME
+  PART_TIME
+  CONTRACT
+  INTERNSHIP
+  TEMPORARY
 }

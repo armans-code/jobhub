@@ -29,12 +29,10 @@ export async function createApplicant(body: CreateApplicantBody) {
   return applicant;
 }
 
-export async function createJob(body: CreateJobBody) {
-  const job = await prisma.job.create({ data: body });
+export async function deleteJob(id: string) {
+  const job = await prisma.job.delete({
+    where: { id },
+    include: { applicants: true, JobTag: true },
+  });
   return job;
-}
-
-export async function register(body: RegisterBody) {
-  const user = await prisma.company.create({ data: body });
-  return user;
 }
