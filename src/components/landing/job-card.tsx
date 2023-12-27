@@ -15,7 +15,7 @@ const JobCard = (props: JobCardProps) => {
   return (
     <Card>
       <CardHeader>
-        <h3 className='text-2xl font-bold'>{title}</h3>
+        <h3 className='text-xl font-semibold'>{title}</h3>
         {tags.map((tag) => (
           <Badge className='mt-2 w-min' key={tag}>
             {tag}
@@ -23,7 +23,7 @@ const JobCard = (props: JobCardProps) => {
         ))}
       </CardHeader>
       <CardContent>
-        <p className='text-gray-600'>{description}</p>
+        <p className='text-gray-600 text-sm'>{description}</p>
         <Avatar className='mt-4' />
         <div className='flex w-full justify-between'>
           <p className='text-gray-600 mt-2'>{company}</p>

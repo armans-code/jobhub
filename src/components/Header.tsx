@@ -6,22 +6,23 @@ import {
   NavigationMenuList,
   NavigationMenuLink,
 } from './ui/navigation-menu';
+import Link from 'next/link';
 
 const Header: React.FC = () => {
   return (
-    <header className='w-full bg-transparent dark:bg-gray-800'>
-      <div className='container px-4 md:px-6 flex justify-between items-center'>
-        <h1 className='text-3xl font-bold'>ABC Company</h1>
+    <header className='w-full bg-transparent dark:bg-gray-800 border-b'>
+      <div className='container px-4 md:px-6 py-4 md:py-6 flex justify-between items-center'>
+        <h1 className='text-3xl font-semibold'>ABC Company</h1>
         <NavigationMenu>
-          <NavigationMenuList>
+          <NavigationMenuList className='space-x-8'>
             <NavigationMenuItem>
-              <NavigationMenuLink href='#'>Home</NavigationMenuLink>
+              <Link href='/'>Home</Link>
             </NavigationMenuItem>
             <NavigationMenuItem>
-              <NavigationMenuLink href='#'>Benefits</NavigationMenuLink>
+              <Link href='/benefits'>Benefits</Link>
             </NavigationMenuItem>
             <NavigationMenuItem>
-              <NavigationMenuLink href='#'>All Jobs</NavigationMenuLink>
+              <Link href='/jobs'>Jobs</Link>
             </NavigationMenuItem>
           </NavigationMenuList>
         </NavigationMenu>
