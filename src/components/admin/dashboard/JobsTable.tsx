@@ -8,6 +8,8 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import prisma from '../../../../lib/prisma';
+import { Button } from '../../ui/button';
+import Link from 'next/link';
 
 async function JobPositionsTable() {
   const jobs = await prisma.job.findMany({
@@ -28,7 +30,11 @@ async function JobPositionsTable() {
       <TableBody>
         {jobs.map((job) => (
           <TableRow key={job.id}>
-            <TableCell className='font-medium'>{job.title}</TableCell>
+            <TableCell className='font-medium'>
+              <Link href={`/admin/jobs/${job.id}`}>
+                <Button variant='link'>{job.title}</Button>
+              </Link>
+            </TableCell>
             <TableCell className='hidden md:table-cell'>
               {job.location}
             </TableCell>
