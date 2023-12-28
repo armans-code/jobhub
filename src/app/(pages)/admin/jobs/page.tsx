@@ -10,10 +10,11 @@ async function ShowJobs() {
     include: { applicants: true, JobTag: { include: { tag: true } } },
     orderBy: { createdAt: 'desc' },
   });
+  const allTags = await prisma.tag.findMany();
   return (
     <>
       {jobs.map((job) => (
-        <JobCard key={job.id} job={job} />
+        <JobCard key={job.id} job={job} allTags={allTags} />
       ))}
     </>
   );

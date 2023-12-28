@@ -1,5 +1,5 @@
 'use client';
-import { Prisma } from '@prisma/client';
+import { Prisma, Tag } from '@prisma/client';
 import React, { useEffect, useRef } from 'react';
 import {
   Card,
@@ -32,13 +32,17 @@ import { convertJobTypeToString } from '../../../utils/job-type';
 import { deleteJob } from '../../../app/actions';
 import { useRouter } from 'next/navigation';
 import sanitizeHtml from 'sanitize-html';
+import { Dialog, DialogContent, DialogTrigger } from '../../ui/dialog';
+import EditJobDialogContent from './EditJobDialogContent';
 
 function JobCard({
   job,
+  allTags,
 }: {
   job: Prisma.JobGetPayload<{
     include: { applicants: true; JobTag: { include: { tag: true } } };
   }>;
+  allTags: Tag[];
 }) {
   const router = useRouter();
   const [showMoreButton, setShowMoreButton] = React.useState(false);
@@ -81,19 +85,26 @@ function JobCard({
               </div>
             </DropdownMenuTrigger>
             <DropdownMenuContent className='flex flex-col'>
-              <DropdownMenuItem
-                className='cursor-pointer'
-                onSelect={(e) => e.preventDefault()}
-              >
-                Edit
-              </DropdownMenuItem>
+              <Dialog>
+                <DialogTrigger asChild>
+                  <DropdownMenuItem
+                    className='cursor-pointer'
+                    onSelect={(e) => e.preventDefault()}
+                  >
+                    Edit
+                  </DropdownMenuItem>
+                </DialogTrigger>
+                <DialogContent className='min-w-[85%] p-0 pt-10 pr-5'>
+                  <EditJobDialogContent job={job} allTags={allTags} />
+                </DialogContent>
+              </Dialog>
               <AlertDialog>
                 <AlertDialogTrigger>
                   <DropdownMenuItem
                     className='!text-red-600 cursor-pointer'
                     onSelect={(e) => e.preventDefault()}
                   >
-                    Delete item
+                    Delete
                   </DropdownMenuItem>
                 </AlertDialogTrigger>
                 <AlertDialogContent>

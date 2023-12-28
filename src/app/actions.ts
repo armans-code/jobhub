@@ -56,3 +56,43 @@ export async function createJob(body: CreateJobBody) {
   });
   return job;
 }
+
+export async function editJob(id: string, body: CreateJobBody) {
+  const { selectedTags, ...rest } = body;
+  const cleanDescription = sanitizeHtml(rest.description);
+  const jobBody = { ...rest, description: cleanDescription };
+  const job = await prisma.job.update({
+    where: { id },
+    data: jobBody,
+  });
+
+  const createNewJobTags = async () => {
+    selectedTags.forEach(async (tag) => {
+      const jobTagExists = await prisma.jobTag.findFirst({
+        where: { jobId: job.id, tagId: tag.id },
+      });
+      if (!jobTagExists) {
+        await prisma.jobTag.create({
+          data: { jobId: job.id, tagId: tag.id },
+        });
+      }
+    });
+  };
+
+  const deleteStaleJobTags = async () => {
+    const allJobTags = await prisma.jobTag.findMany({
+      where: { jobId: job.id },
+    });
+    allJobTags.forEach(async (jobTag) => {
+      const tagExists = selectedTags.find((tag) => tag.id === jobTag.tagId);
+      if (!tagExists) {
+        await prisma.jobTag.delete({ where: { id: jobTag.id } });
+      }
+    });
+  };
+
+  await createNewJobTags();
+  await deleteStaleJobTags();
+
+  return job;
+}
