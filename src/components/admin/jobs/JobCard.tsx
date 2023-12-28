@@ -1,6 +1,6 @@
 'use client';
 import { Prisma } from '@prisma/client';
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import {
   Card,
   CardContent,
@@ -31,6 +31,7 @@ import { Badge } from '../../ui/badge';
 import { convertJobTypeToString } from '../../../utils/job-type';
 import { deleteJob } from '../../../app/actions';
 import { useRouter } from 'next/navigation';
+import sanitizeHtml from 'sanitize-html';
 
 function JobCard({
   job,
@@ -40,6 +41,8 @@ function JobCard({
   }>;
 }) {
   const router = useRouter();
+  const [showMoreButton, setShowMoreButton] = React.useState(false);
+  const [showFullDescription, setShowFullDescription] = React.useState(false);
 
   const applicants = job.applicants.length;
   const jobType = convertJobTypeToString(job.type);
@@ -48,6 +51,18 @@ function JobCard({
     await deleteJob(job.id);
     router.refresh();
   };
+
+  const textContainerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const textContainer = textContainerRef.current;
+    if (textContainer) {
+      const isOverflowing =
+        textContainer.scrollHeight > textContainer.clientHeight;
+
+      setShowMoreButton(isOverflowing);
+    }
+  }, [job.description]);
 
   return (
     <Card>
@@ -110,7 +125,27 @@ function JobCard({
         </div>
       </CardHeader>
       <CardContent className='space-y-2'>
-        <p>{job.description}</p>
+        <div
+          ref={textContainerRef}
+          className={`prose ${
+            showFullDescription
+              ? ''
+              : `max-h-64 overflow-hidden ${
+                  showMoreButton && 'gradient-mask-b-0'
+                }`
+          }`}
+          dangerouslySetInnerHTML={{ __html: sanitizeHtml(job.description) }}
+        />
+
+        {showMoreButton && (
+          <Button
+            variant={'link'}
+            className=' p-0'
+            onClick={() => setShowFullDescription((curr) => !curr)}
+          >
+            {showFullDescription ? <p>Show Less</p> : <p>Show More</p>}
+          </Button>
+        )}
         <div className='flex gap-2'>
           <Button disabled={applicants === 0} variant={'outline'}>
             {applicants === 0

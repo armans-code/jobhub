@@ -58,6 +58,13 @@
   }
 }
 
+.tiptap {
+  p {
+    padding: 0;
+    margin: 5px 0 5px 0;
+  }
+}
+
 @layer base {
   * {
     @apply border-border;

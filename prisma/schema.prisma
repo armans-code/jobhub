@@ -22,18 +22,20 @@ model Admin {
 }
 
 model Job {
-  id          String      @id @default(cuid())
-  title       String
-  description String
-  location    String
-  vacancies   Int         @default(1)
-  salary      Int         @default(0)
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
-  archived    Boolean     @default(false)
-  applicants  Applicant[] @relation
-  JobTag      JobTag[]
-  type        JobType     @default(FULL_TIME)
+  id            String      @id @default(cuid())
+  title         String
+  description   String
+  location      String
+  vacancies     Int         @default(1)
+  salary        Int         @default(0)
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  archived      Boolean     @default(false)
+  applicants    Applicant[] @relation
+  JobTag        JobTag[]
+  type          JobType     @default(FULL_TIME)
+  collectResume Boolean     @default(true)
+  requireResume Boolean     @default(false)
 }
 
 model Applicant {
