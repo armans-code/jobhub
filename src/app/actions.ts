@@ -32,8 +32,9 @@ export type RegisterBody = {
 };
 
 export async function createApplicant(body: CreateApplicantBody) {
-  const applicant = await prisma.applicant.create({ data: body });
-  return applicant;
+  // const applicant = await prisma.applicant.create({ data: body });
+  // return applicant;
+  console.log('Created applicant with: ' + JSON.stringify(body));
 }
 
 export async function deleteJob(id: string) {
@@ -95,4 +96,18 @@ export async function editJob(id: string, body: CreateJobBody) {
   await deleteStaleJobTags();
 
   return job;
+}
+
+export async function getOtherApplications({
+  id,
+  email,
+}: {
+  id: string;
+  email: string;
+}) {
+  const applicants = await prisma.applicant.findMany({
+    where: { email, id: { not: id } },
+    include: { job: true },
+  });
+  return applicants;
 }

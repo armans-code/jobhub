@@ -39,15 +39,60 @@ model Job {
 }
 
 model Applicant {
-  id        String   @id @default(cuid())
-  firstName String
-  lastName  String
-  email     String   @unique
-  phone     String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  jobId     String
-  job       Job      @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  id             String           @id @default(cuid())
+  firstName      String
+  lastName       String
+  email          String
+  phone          String
+  location       String
+  summary        String
+  resumeLink     String
+  pfpLink        String
+  education      Education[]
+  workExperience WorkExperience[]
+  skills         Skill[]
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  jobId          String
+  job            Job              @relation(fields: [jobId], references: [id], onDelete: Cascade)
+}
+
+model Education {
+  id          String    @id @default(cuid())
+  school      String
+  degree      String
+  gpa         Float
+  startYear   Int
+  endYear     Int
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  applicant   Applicant @relation(fields: [applicantId], references: [id], onDelete: Cascade)
+  applicantId String
+}
+
+model WorkExperience {
+  id          String    @id @default(cuid())
+  title       String
+  company     String
+  location    String
+  description String
+  startMonth  Month
+  endMonth    Month
+  startYear   Int
+  endYear     Int
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  applicant   Applicant @relation(fields: [applicantId], references: [id], onDelete: Cascade)
+  applicantId String
+}
+
+model Skill {
+  id          String    @id @default(cuid())
+  name        String    @unique
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  Applicant   Applicant @relation(fields: [applicantId], references: [id], onDelete: Cascade)
+  applicantId String
 }
 
 model Tag {
@@ -76,4 +121,19 @@ enum JobType {
   CONTRACT
   INTERNSHIP
   TEMPORARY
+}
+
+enum Month {
+  JAN
+  FEB
+  MAR
+  APR
+  MAY
+  JUN
+  JUL
+  AUG
+  SEP
+  OCT
+  NOV
+  DEC
 }

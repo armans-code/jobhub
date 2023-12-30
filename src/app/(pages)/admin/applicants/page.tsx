@@ -1,7 +1,14 @@
 import React from 'react';
+import prisma from '../../../../../lib/prisma';
+import ApplicantPage from './ApplicantPage';
 
-function page() {
-  return <div>page</div>;
+async function Page() {
+  const applicants = await prisma.applicant.findMany({
+    include: {
+      job: true,
+    },
+  });
+  return <ApplicantPage applicants={applicants} />;
 }
 
-export default page;
+export default Page;
