@@ -21,6 +21,7 @@ import { useParams } from 'next/navigation';
 import { UploadButton } from '../../../../../../utils/files';
 import JobSections from './JobSections';
 import Link from 'next/link';
+import EducationSections from './EducationSections';
 
 export type JobSection = {
   title: string;
@@ -45,6 +46,7 @@ const getDefaultJobSection = () => {
 export type EducationSection = {
   school: string;
   degree: string;
+  major: string;
   gpa: number;
   startYear: number;
   endYear: number;
@@ -54,6 +56,7 @@ const getInitialEducationSection = () => {
   return {
     school: '',
     degree: '',
+    major: '',
     gpa: 0,
     startYear: 0,
     endYear: 0,
@@ -98,8 +101,6 @@ const Page = () => {
       .then((data) => console.log(data))
       .catch((err) => console.log(err));
   };
-
-  console.log(jobs);
 
   return (
     <div className='px-32 flex flex-col gap-4 py-4'>
@@ -237,90 +238,10 @@ const Page = () => {
         <TabsContent value='education'>
           <Card className='space-y-6 p-16'>
             <div className='max-w-2xl mx-auto'>
-              {educations.map((education, index) => (
-                <Card className='mt-2' key={index}>
-                  <CardHeader className='w-full flex flex-row items-center'>
-                    <CardTitle>Education {index + 1}</CardTitle>
-                    <Button
-                      onClick={() => {
-                        const newEducations = [...educations];
-                        newEducations.splice(index, 1);
-                        setEducations(newEducations);
-                      }}
-                      className='ml-auto'
-                      variant='outline'
-                    >
-                      Delete
-                    </Button>
-                  </CardHeader>
-                  <CardContent className='space-y-4'>
-                    <div className='space-y-2'>
-                      <Label htmlFor='school1'>School</Label>
-                      <Input
-                        value={educations[index].school}
-                        onChange={(e) => {
-                          const newEducations = [...educations];
-                          newEducations[index].school = e.target.value;
-                          setEducations(newEducations);
-                        }}
-                        id='school1'
-                        placeholder='Enter school name'
-                      />
-                    </div>
-                    <div className='space-y-2'>
-                      <Label htmlFor='degree1'>Degree</Label>
-                      <Input
-                        value={educations[index].degree}
-                        onChange={(e) => {
-                          const newEducations = [...educations];
-                          newEducations[index].degree = e.target.value;
-                          setEducations(newEducations);
-                        }}
-                        id='degree1'
-                        placeholder='Enter your degree'
-                      />
-                    </div>
-                    <div className='space-y-2'>
-                      <Label htmlFor='gpa1'>GPA</Label>
-                      <Input
-                        value={educations[index].gpa}
-                        onChange={(e) => {
-                          const newEducations = [...educations];
-                          newEducations[index].gpa = +e.target.value;
-                          setEducations(newEducations);
-                        }}
-                        id='gpa1'
-                        type='number'
-                      />
-                    </div>
-                    <div className='space-y-2'>
-                      <Label htmlFor='startDate1'>Start Year</Label>
-                      <Input
-                        value={educations[index].startYear}
-                        onChange={(e) => {
-                          const newEducations = [...educations];
-                          newEducations[index].startYear = +e.target.value;
-                          setEducations(newEducations);
-                        }}
-                        id='startDate1'
-                      />
-                    </div>
-                    <div className='space-y-2'>
-                      <Label htmlFor='endDate1'>End Date</Label>
-                      <Input
-                        value={educations[index].endYear}
-                        onChange={(e) => {
-                          const newEducations = [...educations];
-                          newEducations[index].endYear = +e.target.value;
-                          setEducations(newEducations);
-                        }}
-                        id='endDate1'
-                        type='number'
-                      />
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
+              <EducationSections
+                educations={educations}
+                setEducations={setEducations}
+              />
               <Button
                 onClick={() => {
                   setEducations((educations) => [
