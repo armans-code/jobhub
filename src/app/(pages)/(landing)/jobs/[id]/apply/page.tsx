@@ -18,23 +18,46 @@ import { Input } from '../../../../../../components/ui/input';
 import { Textarea } from '../../../../../../components/ui/textarea';
 import { Button } from '../../../../../../components/ui/button';
 import { useParams } from 'next/navigation';
+import { UploadButton } from '../../../../../../utils/files';
+import JobSections from './JobSections';
+import Link from 'next/link';
 
 export type JobSection = {
-  company?: string;
-  location?: string;
-  role?: string;
-  startDate?: string;
-  endDate?: string;
-  description?: string;
+  title: string;
+  company: string;
+  location: string;
+  description: string;
+  startDate: Date;
+  endDate: Date;
 };
 
-export type Education = {
-  school?: string;
-  location?: string;
-  degree?: string;
-  startDate?: string;
-  endDate?: string;
-  description?: string;
+const getDefaultJobSection = () => {
+  return {
+    title: '',
+    company: '',
+    location: '',
+    description: '',
+    startDate: new Date(),
+    endDate: new Date(),
+  };
+};
+
+export type EducationSection = {
+  school: string;
+  degree: string;
+  gpa: number;
+  startYear: number;
+  endYear: number;
+};
+
+const getInitialEducationSection = () => {
+  return {
+    school: '',
+    degree: '',
+    gpa: 0,
+    startYear: 0,
+    endYear: 0,
+  };
 };
 
 const Page = () => {
@@ -45,23 +68,50 @@ const Page = () => {
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
+  const [location, setLocation] = useState('');
+  const [summary, setSummary] = useState('');
+  const [pfpLink, setPfpLink] = useState('');
+  const [resumeLink, setResumeLink] = useState('');
 
-  const [jobs, setJobs] = useState<JobSection[]>([{}]);
-  const [educations, setEducations] = useState<Education[]>([{}]);
+  const [jobs, setJobs] = useState<JobSection[]>([getDefaultJobSection()]);
+  const [educations, setEducations] = useState<EducationSection[]>([
+    getInitialEducationSection(),
+  ]);
 
   const handleSubmit = async () => {
-    const applicant = await createApplicant({
-      firstName,
-      lastName,
-      email,
-      phone,
-      jobId: id,
-    });
+    const applicant = {
+      applicant: {
+        firstName,
+        lastName,
+        email,
+        phone,
+        location,
+        summary,
+        pfpLink,
+        resumeLink,
+        jobId: id,
+      },
+      jobSections: jobs,
+      educationSections: educations,
+    };
+    await createApplicant(applicant)
+      .then((data) => console.log(data))
+      .catch((err) => console.log(err));
   };
+
+  console.log(jobs);
 
   return (
     <div className='px-32 flex flex-col gap-4 py-4'>
-      <h1 className='text-3xl font-bold'>Application Form</h1>
+      <div className='flex w-full items-center justify-between'>
+        <h1 className='text-3xl font-bold'>Application Form</h1>
+        <div className='flex gap-3'>
+          <Link href={`/jobs/${id}`}>
+            <Button variant={'outline'}>Cancel</Button>
+          </Link>
+          <Button onClick={() => handleSubmit()}>Submit Application</Button>
+        </div>
+      </div>
       <Tabs
         // onValueChange={() => setViewOthers(false)}
         defaultValue='personal'
@@ -81,23 +131,52 @@ const Page = () => {
             <CardContent className='space-y-2'>
               <div className='space-y-2'>
                 <Label htmlFor='email'>Email</Label>
-                <Input id='email' placeholder='johndoe@example.com' />
+                <Input
+                  id='email'
+                  placeholder='johndoe@example.com'
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
               </div>
               <div className='space-y-2'>
                 <Label htmlFor='location'>First Name</Label>
-                <Input id='location' placeholder='John' required />
+                <Input
+                  id='location'
+                  placeholder='John'
+                  value={firstName}
+                  onChange={(e) => setFirstName(e.target.value)}
+                  required
+                />
               </div>
               <div className='space-y-2'>
                 <Label htmlFor='location'>Last Name</Label>
-                <Input id='location' placeholder='Doe, FL' required />
+                <Input
+                  id='location'
+                  placeholder='Doe, FL'
+                  value={lastName}
+                  onChange={(e) => setLastName(e.target.value)}
+                  required
+                />
               </div>
               <div className='space-y-2'>
                 <Label htmlFor='location'>Phone Number</Label>
-                <Input id='location' placeholder='(813) 555-9632' required />
+                <Input
+                  id='location'
+                  placeholder='(555) 555-5555'
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  required
+                />
               </div>
               <div className='space-y-2'>
                 <Label htmlFor='location'>Location</Label>
-                <Input id='location' placeholder='Miami, FL' required />
+                <Input
+                  id='location'
+                  placeholder='Miami, FL'
+                  value={location}
+                  onChange={(e) => setLocation(e.target.value)}
+                  required
+                />
               </div>
               <div className='space-y-2'>
                 <Label htmlFor='summary'>Summary</Label>
@@ -105,16 +184,36 @@ const Page = () => {
                   className='min-h-[100px]'
                   id='summary'
                   placeholder='Enter a brief summary about yourself'
+                  value={summary}
+                  onChange={(e) => setSummary(e.target.value)}
                   required
                 />
               </div>
               <div className='space-y-2'>
                 <Label htmlFor='resume'>Resume</Label>
-                <Input id='resume' required type='file' />
+                <UploadButton
+                  endpoint='imageUploader'
+                  onClientUploadComplete={(files) => {
+                    setResumeLink(files[0].url);
+                  }}
+                  onUploadError={(error: Error) => {
+                    // Do something with the error.
+                    alert(`Couldn't upload file: ${error.message}`);
+                  }}
+                />
               </div>
               <div className='space-y-2'>
                 <Label htmlFor='profile-picture'>Profile Picture</Label>
-                <Input id='profile-picture' required type='file' />
+                <UploadButton
+                  endpoint='imageUploader'
+                  onClientUploadComplete={(files) => {
+                    setPfpLink(files[0].url);
+                  }}
+                  onUploadError={(error: Error) => {
+                    // Do something with the error.
+                    alert(`Couldn't upload file: ${error.message}`);
+                  }}
+                />
               </div>
             </CardContent>
           </Card>
@@ -122,107 +221,10 @@ const Page = () => {
         <TabsContent value='work'>
           <Card className='space-y-6 p-16'>
             <div className='max-w-2xl mx-auto'>
-              {jobs.map((job, index) => (
-                <Card className='mt-2' key={index}>
-                  <CardHeader className='w-full flex flex-row items-center'>
-                    <CardTitle>Job {index + 1}</CardTitle>
-                    <Button
-                      onClick={() => {
-                        const newJobs = [...jobs];
-                        newJobs.splice(index, 1);
-                        setJobs(newJobs);
-                      }}
-                      className='ml-auto'
-                      variant='outline'
-                    >
-                      Delete
-                    </Button>
-                  </CardHeader>
-                  <CardContent className='space-y-4'>
-                    <div className='space-y-2'>
-                      <Label htmlFor='company1'>Company</Label>
-                      <Input
-                        value={jobs[index].company}
-                        onChange={(e) => {
-                          const newJobs = [...jobs];
-                          newJobs[index].company = e.target.value;
-                          setJobs(newJobs);
-                        }}
-                        id='company1'
-                        placeholder='Enter company name'
-                      />
-                    </div>
-                    <div className='space-y-2'>
-                      <Label htmlFor='location1'>Location</Label>
-                      <Input
-                        value={jobs[index].location}
-                        onChange={(e) => {
-                          const newJobs = [...jobs];
-                          newJobs[index].location = e.target.value;
-                          setJobs(newJobs);
-                        }}
-                        id='location1'
-                        placeholder='Enter location'
-                      />
-                    </div>
-                    <div className='space-y-2'>
-                      <Label htmlFor='role1'>Role</Label>
-                      <Input
-                        value={jobs[index].role}
-                        onChange={(e) => {
-                          const newJobs = [...jobs];
-                          newJobs[index].role = e.target.value;
-                          setJobs(newJobs);
-                        }}
-                        id='role1'
-                        placeholder='Enter your role'
-                      />
-                    </div>
-                    <div className='space-y-2'>
-                      <Label htmlFor='startDate1'>Start Date</Label>
-                      <Input
-                        value={jobs[index].startDate}
-                        onChange={(e) => {
-                          const newJobs = [...jobs];
-                          newJobs[index].startDate = e.target.value;
-                          setJobs(newJobs);
-                        }}
-                        id='startDate1'
-                        type='date'
-                      />
-                    </div>
-                    <div className='space-y-2'>
-                      <Label htmlFor='endDate1'>End Date</Label>
-                      <Input
-                        value={jobs[index].endDate}
-                        onChange={(e) => {
-                          const newJobs = [...jobs];
-                          newJobs[index].endDate = e.target.value;
-                          setJobs(newJobs);
-                        }}
-                        id='endDate1'
-                        type='date'
-                      />
-                    </div>
-                    <div className='space-y-2'>
-                      <Label htmlFor='description1'>Job Description</Label>
-                      <Textarea
-                        value={jobs[index].description}
-                        onChange={(e) => {
-                          const newJobs = [...jobs];
-                          newJobs[index].description = e.target.value;
-                          setJobs(newJobs);
-                        }}
-                        id='description1'
-                        placeholder='Describe your role'
-                      />
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
+              <JobSections jobs={jobs} setJobs={setJobs} />
               <Button
                 onClick={() => {
-                  setJobs((jobs) => [...jobs, {}]);
+                  setJobs((jobs) => [...jobs, getDefaultJobSection()]);
                 }}
                 className='w-full mt-4'
                 variant='outline'
@@ -266,19 +268,6 @@ const Page = () => {
                       />
                     </div>
                     <div className='space-y-2'>
-                      <Label htmlFor='location1'>Location</Label>
-                      <Input
-                        value={educations[index].location}
-                        onChange={(e) => {
-                          const newEducations = [...educations];
-                          newEducations[index].location = e.target.value;
-                          setEducations(newEducations);
-                        }}
-                        id='location1'
-                        placeholder='Enter location'
-                      />
-                    </div>
-                    <div className='space-y-2'>
                       <Label htmlFor='degree1'>Degree</Label>
                       <Input
                         value={educations[index].degree}
@@ -292,44 +281,41 @@ const Page = () => {
                       />
                     </div>
                     <div className='space-y-2'>
-                      <Label htmlFor='startDate1'>Start Date</Label>
+                      <Label htmlFor='gpa1'>GPA</Label>
                       <Input
-                        value={educations[index].startDate}
+                        value={educations[index].gpa}
                         onChange={(e) => {
                           const newEducations = [...educations];
-                          newEducations[index].startDate = e.target.value;
+                          newEducations[index].gpa = +e.target.value;
+                          setEducations(newEducations);
+                        }}
+                        id='gpa1'
+                        type='number'
+                      />
+                    </div>
+                    <div className='space-y-2'>
+                      <Label htmlFor='startDate1'>Start Year</Label>
+                      <Input
+                        value={educations[index].startYear}
+                        onChange={(e) => {
+                          const newEducations = [...educations];
+                          newEducations[index].startYear = +e.target.value;
                           setEducations(newEducations);
                         }}
                         id='startDate1'
-                        type='date'
                       />
                     </div>
                     <div className='space-y-2'>
                       <Label htmlFor='endDate1'>End Date</Label>
                       <Input
-                        value={educations[index].endDate}
+                        value={educations[index].endYear}
                         onChange={(e) => {
                           const newEducations = [...educations];
-                          newEducations[index].endDate = e.target.value;
+                          newEducations[index].endYear = +e.target.value;
                           setEducations(newEducations);
                         }}
                         id='endDate1'
-                        type='date'
-                      />
-                    </div>
-                    <div className='space-y-2'>
-                      <Label htmlFor='description1'>
-                        Education Description
-                      </Label>
-                      <Textarea
-                        value={educations[index].description}
-                        onChange={(e) => {
-                          const newEducations = [...educations];
-                          newEducations[index].description = e.target.value;
-                          setEducations(newEducations);
-                        }}
-                        id='description1'
-                        placeholder='Describe your education'
+                        type='number'
                       />
                     </div>
                   </CardContent>
@@ -337,12 +323,15 @@ const Page = () => {
               ))}
               <Button
                 onClick={() => {
-                  setEducations((educations) => [...educations, {}]);
+                  setEducations((educations) => [
+                    ...educations,
+                    getInitialEducationSection(),
+                  ]);
                 }}
                 className='w-full mt-4'
                 variant='outline'
               >
-                Add another education
+                Add another education section
               </Button>
             </div>
           </Card>

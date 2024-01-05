@@ -6,6 +6,11 @@ async function Page() {
   const applicants = await prisma.applicant.findMany({
     include: {
       job: true,
+      workExperience: true,
+      education: true,
+    },
+    orderBy: {
+      createdAt: 'desc',
     },
   });
   return <ApplicantPage applicants={applicants} />;

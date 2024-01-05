@@ -7,10 +7,14 @@ import SelectedApplicant from '../../../../components/admin/applicants/SelectedA
 function ApplicantPage({
   applicants,
 }: {
-  applicants: Prisma.ApplicantGetPayload<{ include: { job: true } }>[];
+  applicants: Prisma.ApplicantGetPayload<{
+    include: { job: true; workExperience: true; education: true };
+  }>[];
 }) {
   const [selectedApplicant, setSelectedApplicant] = React.useState<
-    Prisma.ApplicantGetPayload<{ include: { job: true } }>
+    Prisma.ApplicantGetPayload<{
+      include: { job: true; education: true; workExperience: true };
+    }>
   >(applicants[0]);
   return (
     <div className='w-full h-full flex flex-col md:flex-row gap-6'>

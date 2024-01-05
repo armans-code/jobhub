@@ -16,16 +16,29 @@ import { Table, TableBody, TableCell, TableRow } from '../../ui/table';
 import { Label } from '../../ui/label';
 import { Separator } from '../../ui/separator';
 import OtherApplications from './OtherApplications';
+import { format, intervalToDuration } from 'date-fns';
+import { rejectApplicant } from '../../../app/actions';
+import { useRouter } from 'next/navigation';
 
 function SelectedApplicant({
   applicant,
 }: {
-  applicant: Prisma.ApplicantGetPayload<{ include: { job: true } }>;
+  applicant: Prisma.ApplicantGetPayload<{
+    include: { job: true; workExperience: true; education: true };
+  }>;
 }) {
+  const router = useRouter();
+
   const [viewOthers, setViewOthers] = useState(false);
   useEffect(() => {
     setViewOthers(false);
   }, [applicant]);
+
+  const handleReject = async () => {
+    await rejectApplicant(applicant.id).then(() => {
+      router.refresh();
+    });
+  };
   return (
     <div className='w-full md:w-2/3 h-full flex flex-col gap-6 p-4 rounded border-2'>
       <div className='flex md:flex-row flex-col gap-4 items-center justify-between'>
@@ -53,7 +66,9 @@ function SelectedApplicant({
           </div>
         </div>
         <div className='flex items-center gap-4 md:w-min w-full justify-end'>
-          <Button variant={'outline'}>Reject</Button>
+          <Button onClick={handleReject} variant={'outline'}>
+            Reject
+          </Button>
           <Button variant='destructive'>Block</Button>
         </div>
       </div>
@@ -62,16 +77,20 @@ function SelectedApplicant({
         defaultValue='overview'
         className='w-full'
       >
-        <TabsList
-          className={`grid w-full grid-cols-${
-            applicant.resumeLink ? '4' : '3'
-          }`}
-        >
-          <TabsTrigger value='overview'>Overview</TabsTrigger>
-          <TabsTrigger value='work'>Work</TabsTrigger>
-          <TabsTrigger value='education'>Education</TabsTrigger>
+        <TabsList className={`flex w-full`}>
+          <TabsTrigger className='w-full' value='overview'>
+            Overview
+          </TabsTrigger>
+          <TabsTrigger className='w-full' value='work'>
+            Work
+          </TabsTrigger>
+          <TabsTrigger className='w-full' value='education'>
+            Education
+          </TabsTrigger>
           {applicant.resumeLink && (
-            <TabsTrigger value='resume'>Resume</TabsTrigger>
+            <TabsTrigger className='w-full' value='resume'>
+              Resume
+            </TabsTrigger>
           )}
         </TabsList>
         <TabsContent value='overview'>
@@ -146,33 +165,37 @@ function SelectedApplicant({
               <CardTitle className='text-xl'>Work Experience</CardTitle>
             </CardHeader>
             <CardContent>
-              <div>
-                <Label className='font-bold text-lg'>Facebook</Label>
-                <p className='text-md font-semibold'>Software Engineer</p>
-                <div className='flex items-center gap-2'>
-                  <p className='text-sm'>Remote | September 2017 - July 2022</p>
-                  <p className='text-xs text-gray-500'>4y 10 mo.</p>
-                </div>
-                <p>
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Quis
-                  a voluptate, cumque, quibusdam, quas voluptatum quod
-                  reprehenderit doloremque quia vero doloribus.
-                </p>
-              </div>
-              <Separator className='my-4' />
-              <div>
-                <Label className='font-bold text-lg'>Quizlet</Label>
-                <p className='text-md font-semibold'>Card Creator</p>
-                <div className='flex items-center gap-2'>
-                  <p className='text-sm'>Miami, FL | May 2010 - August 2017</p>
-                  <p className='text-xs text-gray-500'>7y 3 mo.</p>
-                </div>
-                <p>
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Quis
-                  a voluptate, cumque, quibusdam, quas voluptatum quod
-                  reprehenderit doloremque quia vero doloribus.
-                </p>
-              </div>
+              {applicant.workExperience.map((job) => {
+                const jobDurationYears = intervalToDuration({
+                  start: job.startDate,
+                  end: job.endDate,
+                }).years;
+                const jobDurationMonths = intervalToDuration({
+                  start: job.startDate,
+                  end: job.endDate,
+                }).months;
+                const jobDuration =
+                  jobDurationYears && jobDurationMonths
+                    ? `${jobDurationYears}yrs ${jobDurationMonths}mo`
+                    : '';
+                return (
+                  <div key={job.id}>
+                    <div>
+                      <Label className='font-bold text-lg'>{job.company}</Label>
+                      <p className='text-md font-semibold'>{job.title}</p>
+                      <div className='flex items-center gap-2'>
+                        <p className='text-sm'>
+                          {job.location} | {format(job.startDate, 'LLLL yyyy')}{' '}
+                          - {format(job.endDate, 'LLLL yyyy')}
+                        </p>
+                        <p className='text-xs text-gray-500'>{jobDuration}</p>
+                      </div>
+                      <p>{job.description}</p>
+                    </div>
+                    <Separator className='my-4' />
+                  </div>
+                );
+              })}
             </CardContent>
           </Card>
         </TabsContent>
@@ -182,44 +205,42 @@ function SelectedApplicant({
               <CardTitle className='text-xl'>Education</CardTitle>
             </CardHeader>
             <CardContent>
-              <div>
-                <p className='font-bold text-lg'>University of Miami</p>
-                <p className='text-sm text-gray-400'>2006 - 2010</p>
-                <Table>
-                  <TableBody>
-                    <TableRow className='py-8'>
-                      <TableCell className='font-medium text-gray-400'>
-                        Degree
-                      </TableCell>
-                      <TableCell className='font-medium'>
-                        Bachelors of Science
-                      </TableCell>
-                    </TableRow>
-                    <TableRow className='py-8'>
-                      <TableCell className='font-medium text-gray-400'>
-                        Major
-                      </TableCell>
-                      <TableCell className='font-medium'>
-                        Computer Science
-                      </TableCell>
-                    </TableRow>
-                    <TableRow className='py-8'>
-                      <TableCell className='font-medium text-gray-400'>
-                        Minor
-                      </TableCell>
-                      <TableCell className='font-medium'>
-                        Business Administration
-                      </TableCell>
-                    </TableRow>
-                    <TableRow className='py-8'>
-                      <TableCell className='font-medium text-gray-400'>
-                        GPA
-                      </TableCell>
-                      <TableCell className='font-medium'>3.8</TableCell>
-                    </TableRow>
-                  </TableBody>
-                </Table>
-              </div>
+              {applicant.education.map((school) => (
+                <div key={school.id} className='mb-4'>
+                  <p className='font-bold text-lg'>{school.school}</p>
+                  <p className='text-sm text-gray-400'>
+                    {school.startYear} - {school.endYear}
+                  </p>
+                  <Table>
+                    <TableBody>
+                      <TableRow className='py-8'>
+                        <TableCell className='font-medium text-gray-400'>
+                          Degree
+                        </TableCell>
+                        <TableCell className='font-medium'>
+                          {school.degree}
+                        </TableCell>
+                      </TableRow>
+                      <TableRow className='py-8'>
+                        <TableCell className='font-medium text-gray-400'>
+                          Major
+                        </TableCell>
+                        <TableCell className='font-medium'>
+                          {school.major}
+                        </TableCell>
+                      </TableRow>
+                      <TableRow className='py-8'>
+                        <TableCell className='font-medium text-gray-400'>
+                          GPA
+                        </TableCell>
+                        <TableCell className='font-medium'>
+                          {school.gpa}
+                        </TableCell>
+                      </TableRow>
+                    </TableBody>
+                  </Table>
+                </div>
+              ))}
             </CardContent>
           </Card>
         </TabsContent>

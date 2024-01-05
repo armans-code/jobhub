@@ -61,6 +61,7 @@ model Education {
   id          String    @id @default(cuid())
   school      String
   degree      String
+  major       String
   gpa         Float
   startYear   Int
   endYear     Int
@@ -76,10 +77,8 @@ model WorkExperience {
   company     String
   location    String
   description String
-  startMonth  Month
-  endMonth    Month
-  startYear   Int
-  endYear     Int
+  startDate   DateTime
+  endDate     DateTime
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
   applicant   Applicant @relation(fields: [applicantId], references: [id], onDelete: Cascade)

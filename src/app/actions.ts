@@ -2,13 +2,25 @@
 import { JobType, Tag } from '@prisma/client';
 import prisma from '../../lib/prisma';
 import sanitizeHtml from 'sanitize-html';
+import {
+  EducationSection,
+  JobSection,
+} from './(pages)/(landing)/jobs/[id]/apply/page';
 
 export type CreateApplicantBody = {
-  firstName: string;
-  lastName: string;
-  email: string;
-  phone: string;
-  jobId: string;
+  applicant: {
+    firstName: string;
+    lastName: string;
+    email: string;
+    phone: string;
+    location: string;
+    summary: string;
+    resumeLink: string;
+    pfpLink: string;
+    jobId: string;
+  };
+  jobSections: JobSection[];
+  educationSections: EducationSection[];
 };
 
 export type CreateJobBody = {
@@ -32,9 +44,20 @@ export type RegisterBody = {
 };
 
 export async function createApplicant(body: CreateApplicantBody) {
-  // const applicant = await prisma.applicant.create({ data: body });
-  // return applicant;
-  console.log('Created applicant with: ' + JSON.stringify(body));
+  const applicant = await prisma.applicant.create({ data: body.applicant });
+  const educations = await prisma.education.createMany({
+    data: body.educationSections.map((section) => ({
+      ...section,
+      applicantId: applicant.id,
+    })),
+  });
+  const jobs = await prisma.workExperience.createMany({
+    data: body.jobSections.map((section) => ({
+      ...section,
+      applicantId: applicant.id,
+    })),
+  });
+  return applicant;
 }
 
 export async function deleteJob(id: string) {
@@ -110,4 +133,11 @@ export async function getOtherApplications({
     include: { job: true },
   });
   return applicants;
+}
+
+export async function rejectApplicant(id: string) {
+  const applicant = await prisma.applicant.delete({
+    where: { id },
+  });
+  return applicant;
 }
