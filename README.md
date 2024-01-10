@@ -1,53 +1,18 @@
-# init!
-
-PUBLIC ROUTES:
-
+# How to use:
+- To access the live website, please visit https://jobhub-six.vercel.app/.
+- To visit the website's admin dashboard, please visit https://jobhub-six.vercel.app/admin. You can login with the following:
+  - email: proof@gmail.com
+  - password: Proof@1234
+- Feel free to add, remove, and edit any jobs or applicants!
+# Breakdown of website's pages:
 - /
-  - landing page
-  - benefits
-  - featured jobs
-  - testimonials
+  - This is the home page. Here, you can see all the categories and featured jobs for our mock comapny, ABC Company
 - /benefits
-  - list of benefits
+  - This is the benefits page, which includes benefits or reasons to work at ABC Company.
 - /jobs
-  - all list of available jobs
-  - searchable
+  - This is the list of all jobs, where you can click "More Information" on any job. This will take you to the job page.
 - /job/[id]
-  - specific job information
-  - application form
-
-PRIVATE ROUTES:
-
-- /admin
-  - dashboard with metrics
-    - number of applicants
-    - number of jobs
-    - …
-- /admin/jobs
-  - view list of all jobs, show number of applicants per job
-  - archive, delete jobs
-- /admin/jobs/[id]
-  - view all applicants who applied for specific job
-  - view specific job information
-  - edit job info, archive job, delete job
-  - block applicants
-- /admin/applicants
-  - view all applicants filtered by job
-- /admin/applicants/[id]
-  - view information for one specific applicant
-  - view all jobs this applicant has applied for
-  - block applicant for specific jobs
-  - block applicant for all jobs
-- /admin/team
-  - see all team members
-  - remove team members
-  - see which team members have accepted, blocked who
-- /admin/tags
-  - modify (add,delete,edit) job tags
-
-future features:
-
-- export to PDF/CSV
-- in-site resume viewer
-- message applicants within app
-- auto-email on accepting/rejecting applicant
+  - This is the job page. Here, you can see speciifc information for a selected job. You can also hit "Apply Now" to open its job application form.
+- /job/[id]/apply
+  - This is the job application page. Here, you can add any information about an applicant and hit "submit application". Your application will then be visible in the admin dashboard.
+  
