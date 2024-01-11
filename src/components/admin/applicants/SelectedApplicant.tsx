@@ -58,7 +58,7 @@ function SelectedApplicant({
                 className='underline'
                 target='_blank'
                 rel='noopener noreferrer'
-                href={`/admin/jobs/${applicant.job.id}`}
+                href={`/jobs/${applicant.job.id}`}
               >
                 {applicant.job.title}
               </Link>

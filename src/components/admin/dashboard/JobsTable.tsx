@@ -31,7 +31,7 @@ async function JobPositionsTable() {
         {jobs.map((job) => (
           <TableRow key={job.id}>
             <TableCell className='font-medium'>
-              <Link href={`/admin/jobs/${job.id}`}>
+              <Link href={`/jobs/${job.id}`}>
                 <Button variant='link'>{job.title}</Button>
               </Link>
             </TableCell>
