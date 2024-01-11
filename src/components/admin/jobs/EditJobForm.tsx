@@ -54,8 +54,9 @@ function EditJobForm({
 
   const editor = useEditor({
     extensions: [StarterKit],
-    content:
-      '<h2>Job Opening</h2><p>Write information about your job opening here! Feel free to use:</p><ul><li><p><strong>Bold</strong></p></li><li><p><em>Italic</em></p></li><li><p><s>Strikethrough</s></p></li></ul><p>And:</p><ol><li><p>Bullet lists</p></li><li><p>Ordered list</p></li></ol>',
+    content: currentJob?.description?.length
+      ? currentJob?.description
+      : '<h2>Job Opening</h2><p>Write ianformation about your job opening here! Feel free to use:</p><ul><li><p><strong>Bold</strong></p></li><li><p><em>Italic</em></p></li><li><p><s>Strikethrough</s></p></li></ul><p>And:</p><ol><li><p>Bullet lists</p></li><li><p>Ordered list</p></li></ol>',
     editorProps: {
       attributes: {
         class: 'prose outline-none',
