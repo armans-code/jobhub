@@ -19,6 +19,7 @@ import OtherApplications from './OtherApplications';
 import { format, intervalToDuration } from 'date-fns';
 import { rejectApplicant } from '../../../app/actions';
 import { useRouter } from 'next/navigation';
+import { useToast } from '../../ui/use-toast';
 
 function SelectedApplicant({
   applicant,
@@ -28,6 +29,7 @@ function SelectedApplicant({
   }>;
 }) {
   const router = useRouter();
+  const { toast } = useToast();
 
   const [viewOthers, setViewOthers] = useState(false);
   useEffect(() => {
@@ -36,6 +38,11 @@ function SelectedApplicant({
 
   const handleReject = async () => {
     await rejectApplicant(applicant.id).then(() => {
+      toast({
+        title: 'Rejected applicant.',
+        description: 'Deleting applicant from list...',
+        duration: 5000,
+      });
       router.refresh();
     });
   };
@@ -69,7 +76,7 @@ function SelectedApplicant({
           <Button onClick={handleReject} variant={'outline'}>
             Reject
           </Button>
-          <Button variant='destructive'>Block</Button>
+          {/* <Button variant='destructive'>Block</Button> */}
         </div>
       </div>
       <Tabs

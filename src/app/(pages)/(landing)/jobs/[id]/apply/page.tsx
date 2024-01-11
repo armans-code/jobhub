@@ -22,6 +22,8 @@ import { UploadButton } from '../../../../../../utils/files';
 import JobSections from './JobSections';
 import Link from 'next/link';
 import EducationSections from './EducationSections';
+import { useToast } from '../../../../../../components/ui/use-toast';
+import { useRouter } from 'next/navigation';
 
 export type JobSection = {
   title: string;
@@ -64,8 +66,10 @@ const getInitialEducationSection = () => {
 };
 
 const Page = () => {
+  const router = useRouter();
   const params = useParams<{ id: string }>();
   const { id } = params;
+  const { toast } = useToast();
 
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -98,7 +102,15 @@ const Page = () => {
       educationSections: educations,
     };
     await createApplicant(applicant)
-      .then((data) => console.log(data))
+      .then((data) => {
+        console.log(data);
+        toast({
+          title: 'Application submitted successfully',
+          description: 'Thank you for applying!',
+          duration: 5000,
+        });
+        router.push(`/jobs/${data.jobId}`);
+      })
       .catch((err) => console.log(err));
   };
 
