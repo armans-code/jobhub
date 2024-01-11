@@ -34,6 +34,7 @@ import { useRouter } from 'next/navigation';
 import sanitizeHtml from 'sanitize-html';
 import { Dialog, DialogContent, DialogTrigger } from '../../ui/dialog';
 import EditJobDialogContent from './EditJobDialogContent';
+import Link from 'next/link';
 
 function JobCard({
   job,
@@ -158,11 +159,13 @@ function JobCard({
           </Button>
         )}
         <div className='flex gap-2'>
-          <Button disabled={applicants === 0} variant={'outline'}>
-            {applicants === 0
-              ? `No Applicants`
-              : `View ${applicants} Applicant${applicants > 1 ? 's' : ''}`}
-          </Button>
+          <Link href='/admin/applicants'>
+            <Button disabled={applicants === 0} variant={'outline'}>
+              {applicants === 0
+                ? `No Applicants`
+                : `View ${applicants} Applicant${applicants > 1 ? 's' : ''}`}
+            </Button>
+          </Link>
         </div>
       </CardContent>
     </Card>
