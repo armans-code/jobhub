@@ -2,6 +2,7 @@ import { Avatar } from '../ui/avatar';
 import { Badge } from '../ui/badge';
 import { Button } from '../ui/button';
 import { Card, CardContent, CardHeader } from '../ui/card';
+import sanitizeHtml from 'sanitize-html';
 
 type JobCardProps = {
   title: string;
@@ -23,10 +24,14 @@ const JobCard = (props: JobCardProps) => {
         ))}
       </CardHeader>
       <CardContent>
-        <p className='text-gray-600 text-sm'>{description}</p>
+        <div
+          className='prose'
+          dangerouslySetInnerHTML={{
+            __html: sanitizeHtml(description),
+          }}
+        />
         <Avatar className='mt-4' />
         <div className='flex w-full justify-between'>
-          <p className='text-gray-600 mt-2'>{company}</p>
           <Button>Apply</Button>
         </div>
       </CardContent>

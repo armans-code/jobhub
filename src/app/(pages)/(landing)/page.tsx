@@ -1,7 +1,5 @@
 import Link from 'next/link';
 import { Badge } from '../../../components/ui/badge';
-import { Input } from '../../../components/ui/input';
-import { Button } from '../../../components/ui/button';
 import JobCard from '../../../components/landing/job-card';
 import prisma from '../../../../lib/prisma';
 
@@ -16,15 +14,8 @@ export default async function Home() {
         <h2 className='text-3xl font-semibold mb-4'>Find your perfect job</h2>
         <p className='text-md text-gray-600 mb-6'>
           We connect job seekers with new experiences. Start your job search
-          today.
+          with ABC Company today.
         </p>
-        <div className='flex w-full max-w-lg items-center space-x-2 mb-8'>
-          <Input
-            placeholder='Search job titles, departments, or keywords'
-            type='text'
-          />
-          <Button type='submit'>Search</Button>
-        </div>
       </section>
       <section className='container mx-auto px-4 md:px-6'>
         <h2 className='text-3xl font-semibold mb-6'>Categories</h2>

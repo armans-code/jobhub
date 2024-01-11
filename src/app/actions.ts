@@ -6,6 +6,7 @@ import {
   EducationSection,
   JobSection,
 } from './(pages)/(landing)/jobs/[id]/apply/page';
+import { revalidateTag } from 'next/cache';
 
 export type CreateApplicantBody = {
   applicant: {
@@ -44,6 +45,9 @@ export type RegisterBody = {
 };
 
 export async function createApplicant(body: CreateApplicantBody) {
+  revalidateTag('applicant');
+  revalidateTag('education');
+  revalidateTag('workExperience');
   const applicant = await prisma.applicant.create({ data: body.applicant });
   const educations = await prisma.education.createMany({
     data: body.educationSections.map((section) => ({
@@ -61,6 +65,7 @@ export async function createApplicant(body: CreateApplicantBody) {
 }
 
 export async function deleteJob(id: string) {
+  revalidateTag('job');
   const job = await prisma.job.delete({
     where: { id },
     include: { applicants: true, JobTag: true },
@@ -69,6 +74,7 @@ export async function deleteJob(id: string) {
 }
 
 export async function createJob(body: CreateJobBody) {
+  revalidateTag('job');
   const { selectedTags, ...rest } = body;
   const cleanDescription = sanitizeHtml(rest.description);
   const jobBody = { ...rest, description: cleanDescription };
@@ -82,6 +88,8 @@ export async function createJob(body: CreateJobBody) {
 }
 
 export async function editJob(id: string, body: CreateJobBody) {
+  revalidateTag('job');
+  revalidateTag('jobTag');
   const { selectedTags, ...rest } = body;
   const cleanDescription = sanitizeHtml(rest.description);
   const jobBody = { ...rest, description: cleanDescription };
@@ -128,6 +136,7 @@ export async function getOtherApplications({
   id: string;
   email: string;
 }) {
+  revalidateTag('applicant');
   const applicants = await prisma.applicant.findMany({
     where: { email, id: { not: id } },
     include: { job: true },
@@ -136,6 +145,7 @@ export async function getOtherApplications({
 }
 
 export async function rejectApplicant(id: string) {
+  revalidateTag('applicant');
   const applicant = await prisma.applicant.delete({
     where: { id },
   });
